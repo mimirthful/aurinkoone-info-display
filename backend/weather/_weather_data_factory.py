@@ -1,6 +1,6 @@
 import json
 import os
-from backend.time import datestring_to_datetime
+from backend.timeUtilities import datestring_to_datetime
 import calendar
 
 
@@ -20,9 +20,9 @@ class WeatherObjectFactory:
                 data = json.load(f)
                 return data
         except:
-            print("WeatherObjectFactory: _set_info(): couldn't open weather.json")
+            raise Exception("Could not open weather.json")
 
-    def _set_timeseries_list(self):
+    def _set_timeseries_list(self) -> list:
         try:
             timeseries_list = self._info.get(
                 "properties", {}).get("timeseries", [])
@@ -33,7 +33,7 @@ class WeatherObjectFactory:
             return []
 
     class WeatherData:
-        def __init__(self, info_dict):
+        def __init__(self, info_dict: dict):
             self._info_dict = info_dict
             self._datestring_to_datetime = datestring_to_datetime
             self.datetime = self._set_datetime()
@@ -44,7 +44,13 @@ class WeatherObjectFactory:
                 "relative_humidity")
             self.instant_wind_from_direction = self._get_instant_detail(
                 "wind_from_direction")
+            self.instant_ultraviolet_index_clear_sky = self._get_instant_detail(
+                "ultraviolet_index_clear_sky")
             self.instant_wind_speed = self._get_instant_detail("wind_speed")
+
+            self.next_1_hours_rain_change = self._get_x_hours_details(
+                1, "probability_of_precipitation")
+
             self.next_12_hours_symbol_path = self._find_weather_icon(12)
             self.next_1_hours_symbol_path = self._find_weather_icon(1)
             self.next_6_hours_symbol_path = self._find_weather_icon(6)
@@ -54,7 +60,7 @@ class WeatherObjectFactory:
             if time:
                 datetime_obj = self._datestring_to_datetime(time)
                 return datetime_obj
-            return None
+            raise ValueError("Could not determine timestamp")
 
         # get 1/6/12 h icons
         def _get_icon_code(self, next_hours):
@@ -81,7 +87,16 @@ class WeatherObjectFactory:
                     if requested_detail in details_dict:
                         return details_dict.get(requested_detail)
                 case _:
-                    return "Not found"
+                    return None
+
+        def _get_x_hours_details(self, next_hours, requested_detail):
+            hours_str = f'next_{next_hours}_hours'
+            try:
+                detail = self._info_dict.get("data", {}).get(
+                    hours_str, {}).get("details", {}).get(requested_detail)
+                return detail
+            except:
+                return None
 
     def _create_info_obj(self, list_spot):
         try:

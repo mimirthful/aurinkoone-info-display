@@ -5,6 +5,7 @@
 ### Project based ###
 weather.json
 glade_out.py
+dependencies.txt
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

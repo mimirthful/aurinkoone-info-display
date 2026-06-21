@@ -1,3 +1,6 @@
+import datetime as dt
+
+
 class DateTimeRelation:
     """ compares datetime instances together
 
@@ -5,7 +8,7 @@ class DateTimeRelation:
     the time_b is on the future or past related to time_a
     """
 
-    def __init__(self, time_a, time_b):
+    def __init__(self, time_a: dt.datetime, time_b: dt.datetime):
         # datetimes
         self.time_to_compare = time_b
         self.time_now = time_a

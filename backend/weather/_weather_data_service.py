@@ -1,5 +1,6 @@
+from datetime import datetime
 from ._weather_data_factory import WeatherObjectFactory as wof
-from backend.time import TimeManager
+from backend.timeUtilities import TimeManager
 
 
 class WeatherDataService:
@@ -46,7 +47,7 @@ class WeatherDataService:
         }
         self._populate_lists()
 
-    def _get_obj_list_index(self, searched_date):
+    def _get_obj_list_index(self, searched_date: datetime) -> int:
         """Returns obj from the obj_list with exact or nearest past date & hour"""
         data_array = self.obj_list
 
@@ -96,7 +97,7 @@ class WeatherDataService:
             self.next_7_days[item] = obj
             i = i + 1
 
-    def return_info_from_key(self, key):
+    def return_info_from_key(self, key: str) -> wof.WeatherData | None:
         if key in self.next_12_hours_per_hour:
             return self.next_12_hours_per_hour.get(key)
         if key in self.next_7_days:

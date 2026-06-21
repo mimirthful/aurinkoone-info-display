@@ -1,5 +1,5 @@
 import wx
-from frontend.forecast.forecast_panel import ForecastPanel
+from frontend.forecast import ForecastPanel
 
 
 class NotebookPanel(wx.Panel):
