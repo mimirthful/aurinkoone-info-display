@@ -1,3 +1,4 @@
-from .forecast_panel import ForecastPanel
+from .hourly_forecast_panel import HourlyForecastPanel
+from .week_forecast_panel import WeekForecastPanel
 
-__all__ = ["ForecastPanel"]
+__all__ = ["HourlyForecastPanel", "WeekForecastPanel"]

@@ -52,6 +52,7 @@ class WeatherObjectFactory:
                 1, "probability_of_precipitation")
 
             self.next_12_hours_symbol_path = self._find_weather_icon(12)
+            self.next_12_hours_temp = []
             self.next_1_hours_symbol_path = self._find_weather_icon(1)
             self.next_6_hours_symbol_path = self._find_weather_icon(6)
 
@@ -89,7 +90,7 @@ class WeatherObjectFactory:
                 case _:
                     return None
 
-        def _get_x_hours_details(self, next_hours, requested_detail):
+        def _get_x_hours_details(self, next_hours, requested_detail) -> int | str | None:
             hours_str = f'next_{next_hours}_hours'
             try:
                 detail = self._info_dict.get("data", {}).get(

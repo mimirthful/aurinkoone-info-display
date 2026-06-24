@@ -6,11 +6,9 @@ from backend.timeUtilities import TimeManager
 class WeatherDataService:
     def __init__(self):
 
-        self.obj_maker = wof()
-        self.calendar = TimeManager()
-
-        self.obj_maker = wof()
-        self.obj_list = self.obj_maker.objects
+        self._calendar = TimeManager()
+        self._obj_maker = wof()
+        self._obj_list = self._obj_maker.objects
 
         self.next_12_hours_per_hour = {
             "now": None,
@@ -49,7 +47,7 @@ class WeatherDataService:
 
     def _get_obj_list_index(self, searched_date: datetime) -> int:
         """Returns obj from the obj_list with exact or nearest past date & hour"""
-        data_array = self.obj_list
+        data_array = self._obj_list
 
         left = 0
         right = len(data_array) - 1
@@ -57,8 +55,8 @@ class WeatherDataService:
         while left <= right:
             mid = left + (right - left) // 2
 
-            time = self.calendar.compare_times_together(
-                searched_date, self.obj_list[mid].datetime)
+            time = self._calendar.compare_times_together(
+                searched_date, self._obj_list[mid].datetime)
 
             # if index containing this date is found
             if not time.is_diff_date:
@@ -82,19 +80,30 @@ class WeatherDataService:
 
     def _populate_lists(self):
         dict_length_12_hours = len(self.next_12_hours_per_hour)
-        time_arr = self.calendar.get_next_x_hours(dict_length_12_hours)
+        time_arr = self._calendar.get_next_x_hours(dict_length_12_hours)
         i = 0
         for item in self.next_12_hours_per_hour:
-            obj = self.obj_list[self._get_obj_list_index(time_arr[i])]
+            obj = self._obj_list[self._get_obj_list_index(time_arr[i])]
+            obj.next_12_hours_temp = self._next_12_hours_temp(obj.datetime)
             self.next_12_hours_per_hour[item] = obj
             i = i + 1
 
         dict_length_7_days = len(self.next_7_days)
-        time_arr = self.calendar.get_next_x_days(dict_length_7_days, 12)
+        time_arr = self._calendar.get_next_x_days(dict_length_7_days, 6)
         i = 0
         for item in self.next_7_days:
-            obj = self.obj_list[self._get_obj_list_index(time_arr[i])]
+            obj = self._obj_list[self._get_obj_list_index(time_arr[i])]
+            obj.next_12_hours_temp = self._next_12_hours_temp(obj.datetime)
             self.next_7_days[item] = obj
+            i = i + 1
+
+        dict_length_7_nights = len(self.next_7_nights)
+        time_arr = self._calendar.get_next_x_days(dict_length_7_nights, 18)
+        i = 0
+        for item in self.next_7_nights:
+            obj = self._obj_list[self._get_obj_list_index(time_arr[i])]
+            obj.next_12_hours_temp = self._next_12_hours_temp(obj.datetime)
+            self.next_7_nights[item] = obj
             i = i + 1
 
     def return_info_from_key(self, key: str) -> wof.WeatherData | None:
@@ -104,3 +113,20 @@ class WeatherDataService:
             return self.next_7_days.get(key)
         if key in self.next_7_nights:
             return self.next_7_nights.get(key)
+
+    def _next_12_hours_temp(self, time):
+        time_arr = self._calendar.get_next_x_hours(12, time)
+        temps = []
+        i = 0
+        while len(time_arr) > i:
+            try:
+                obj: wof.WeatherData = self._obj_list[self._get_obj_list_index(
+                    time_arr[i])]
+
+                temps.append(obj.instant_air_temperature)
+
+            except Exception as e:
+                print(f'{e}')
+
+            i = i + 1
+        return temps

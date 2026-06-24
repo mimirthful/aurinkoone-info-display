@@ -7,29 +7,29 @@ class FrontFrame(wx.Frame):  # inherits wx.Frame
     def __init__(self, windowTitle):
         super().__init__(parent=None, title=windowTitle)
         # panel and sizer
-        self.panel = wx.Panel(self)
-        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.panel.SetSizer(self.sizer)
+        panel = wx.Panel(self)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        panel.SetSizer(sizer)
         # Notebook
-        self.notebook = wx.Listbook(self.panel, wx.ID_ANY)
-        self.image_list = wx.ImageList(50, 50)
-        self.notebook.AssignImageList(self.image_list)
+        notebook = wx.Listbook(panel, wx.ID_ANY)
+        image_list = wx.ImageList(50, 50)
+        notebook.AssignImageList(image_list)
         # Icons
-        self.icons = UiBitmaps()
+        icons = UiBitmaps()
 
         # Page 1
-        self.page_one = Panel_01(self.notebook)
-        self.icon_bitmap = self.icons.weather
-        self.icon_index = self.image_list.Add(
-            self.icon_bitmap)
+        page_one = Panel_01(notebook)
+        icon_bitmap = icons.weather
+        icon_index = image_list.Add(
+            icon_bitmap)
 
         # Add pages
-        self.notebook.AddPage(self.page_one, "Weather",
-                              True, self.icon_index)
+        notebook.AddPage(page_one, "Weather",
+                         True, icon_index)
 
         # Add to sizer
-        self.sizer.Add(self.notebook, 1, wx.EXPAND)
-
+        sizer.Add(notebook, 1, wx.EXPAND | wx.ALL, border=10)
+        sizer.SetSizeHints(self)
         # Show the window
         self.Show()
 

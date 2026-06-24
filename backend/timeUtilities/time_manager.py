@@ -22,10 +22,13 @@ class TimeManager:
     def get_time_current(self):
         return self._get_time_now()
 
-    def get_next_x_hours(self, hours: int) -> list[dt.datetime]:
+    def get_next_x_hours(self, hours: int, from_hours: dt.datetime | None = None) -> list[dt.datetime]:
+        hours = hours - 1
         i = 0
         datetimes: list[dt.datetime] = []
         time = self._get_time_now()
+        if from_hours:
+            time = from_hours
         while i <= hours:
             res = time + dt.timedelta(hours=i)
             datetimes.append(res)
