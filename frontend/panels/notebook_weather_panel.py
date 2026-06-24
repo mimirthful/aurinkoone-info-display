@@ -3,7 +3,7 @@ from frontend.forecast import HourlyForecastPanel, WeekForecastPanel
 from frontend.todaystats import MainTempPanel, StatPanel
 
 
-class NotebookPanel(wx.Panel):
+class NotebookWeatherPanel(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
         # Notebook panel's main sizer

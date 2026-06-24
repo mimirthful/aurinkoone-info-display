@@ -1,5 +1,5 @@
 import wx
-from frontend.panels import Panel_01
+from frontend.panels import NotebookWeatherPanel, NotebookBusPanel, NotebookSettingsPanel
 from frontend.ui_bitmaps import UiBitmaps
 
 
@@ -18,17 +18,26 @@ class FrontFrame(wx.Frame):  # inherits wx.Frame
         icons = UiBitmaps()
 
         # Page 1
-        page_one = Panel_01(notebook)
-        icon_bitmap = icons.weather
-        icon_index = image_list.Add(
-            icon_bitmap)
-
+        page_one = NotebookWeatherPanel(notebook)
+        icon_one_bitmap = icons.weather
+        icon_one_index = image_list.Add(
+            icon_one_bitmap)
+        # Page 2
+        page_two = NotebookBusPanel(notebook)
+        icon_two_bitmap = icons.bus_stop
+        icon_two_index = image_list.Add(icon_two_bitmap)
+        # Page 3
+        page_three = NotebookSettingsPanel(notebook)
+        icon_three_bitmap = icons.settings
+        icon_three_index = image_list.Add(icon_three_bitmap)
         # Add pages
         notebook.AddPage(page_one, "Weather",
-                         True, icon_index)
+                         True, icon_one_index)
+        notebook.AddPage(page_two, "Bus-stops", False, icon_two_index)
+        notebook.AddPage(page_three, "Settings", False, icon_three_index)
 
         # Add to sizer
-        sizer.Add(notebook, 1, wx.EXPAND | wx.ALL, border=10)
+        sizer.Add(notebook, 1, wx.EXPAND | wx.ALL, border=20)
         sizer.SetSizeHints(self)
         # Show the window
         self.Show()
