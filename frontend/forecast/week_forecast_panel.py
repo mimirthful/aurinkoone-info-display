@@ -29,5 +29,4 @@ class WeekForecastPanel(wx.Panel):
                 sizer.GetStaticBox(), get_weather.get_24_forecast(i), False)
             widget_list.append(widget)
             i = i + 1
-        print(widget_list)
         return widget_list

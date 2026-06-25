@@ -33,7 +33,7 @@ class FrontFrame(wx.Frame):  # inherits wx.Frame
         # Add pages
         notebook.AddPage(page_one, "Weather",
                          True, icon_one_index)
-        notebook.AddPage(page_two, "Bus-stops", False, icon_two_index)
+        notebook.AddPage(page_two, "Bus stops", False, icon_two_index)
         notebook.AddPage(page_three, "Settings", False, icon_three_index)
 
         # Add to sizer

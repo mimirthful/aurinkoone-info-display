@@ -1,0 +1,5 @@
+wxPython
+pytz
+dotenv
+requests
+
